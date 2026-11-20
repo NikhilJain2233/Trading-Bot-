@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    <table>
+      <thead>
+        <tr><th>Symbol</th><th>Name</th></tr>
+      </thead>
+      <tbody>
+        {% for stock in stocks %}
+        <tr><td>{{ stock["symbol"] }}</td><td>{{ stock["name"] }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">No stocks found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
