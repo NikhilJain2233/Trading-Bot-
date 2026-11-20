@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{stock["symbol"]}}</title>
+</head>
+<body>
+    <h1>{{ stock["name"] }}</h1>
+    <p>{{ stock["symbol"] }}</p>
+    {% if price %}
+  <p>Latest closing price: {{ price["close"] }}</p>
+  <p>Date: {{ price["date"] }}</p>
+    {% else %}
+  <p>No price data is available for this stock.</p>
+{% endif %}
+</body>
+</html>
