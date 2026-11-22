@@ -17,7 +17,7 @@
         </tr>
       </thead>
         <tbody>
-        {% for stock in stocks %}
+        {% for price in stock_price %}
         <tr>
           <td>{{ stock["symbol"] }}</td>
           <td> <a href="/stocks/{{ stock['symbol'] }}">{{ stock["name"] }}</a></td>

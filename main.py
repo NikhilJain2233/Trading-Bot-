@@ -3,31 +3,33 @@ from contextlib import closing
 from pathlib import Path
 
 import config
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "template")
+frontend_dist = Path(__file__).resolve().parent / "frontend" / "dist"
+app.mount(
+    "/assets",
+    StaticFiles(directory=frontend_dist / "assets", check_dir=False),
+    name="assets",
+)
 
 
-@app.get("/stocks", response_class=HTMLResponse)
-def index(request: Request):
+@app.get("/api/stocks")
+def list_stocks():
     with closing(sqlite3.connect(config.DATABASE_URL)) as connection:
         connection.row_factory = sqlite3.Row
         rows = connection.execute(
             "SELECT id, symbol, name FROM stocks ORDER BY symbol"
         ).fetchall()
 
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={"title": "Dashboard", "stocks": rows},
-    )
+    return [dict(row) for row in rows]
 
-@app.get("/stocks/{symbol}", response_class=HTMLResponse)
-def stock_detail(request: Request, symbol: str):
+
+@app.get("/api/stocks/{symbol}")
+def stock_detail(symbol: str):
     with closing(sqlite3.connect(config.DATABASE_URL)) as connection:
         connection.row_factory = sqlite3.Row
         stock = connection.execute(
@@ -38,19 +40,32 @@ def stock_detail(request: Request, symbol: str):
         if stock is None:
             raise HTTPException(status_code=404, detail="Stock not found")
 
-        latest_price = connection.execute(
+        prices = connection.execute(
             """
-            SELECT date, close
+            SELECT date, open, close, high, low
             FROM stock_price
             WHERE stock_id = ?
             ORDER BY date DESC
-            LIMIT 1
             """,
             (stock["id"],),
-        ).fetchone()
+        ).fetchall()
 
-    return templates.TemplateResponse(
-        request=request,
-        name="stock_detail.html",
-        context={"stock": stock, "price": latest_price},
-    )
+    return {
+        "stock": dict(stock),
+        "prices": [dict(price) for price in prices],
+    }
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def frontend(full_path: str):
+    if full_path == "api" or full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not found")
+
+    index_file = frontend_dist / "index.html"
+    if not index_file.is_file():
+        raise HTTPException(
+            status_code=503,
+            detail="React frontend is not built. Run `npm run build` in the frontend directory.",
+        )
+
+    return FileResponse(index_file)
