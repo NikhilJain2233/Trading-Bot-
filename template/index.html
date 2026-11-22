@@ -3,21 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <title>Stocks</title>
   </head>
   <body>
-    <h1>{{ title }}</h1>
-    <table>
+     <div class="ui container">
+      <h1>Stocks</h1>
+      <table class="ui striped table">
       <thead>
-        <tr><th>Symbol</th><th>Name</th></tr>
+        <tr>
+          <th >Symbol</th>
+          <th>Name</th>
+        </tr>
       </thead>
-      <tbody>
-        {% for stock in stocks %}
-        <tr><td>{{ stock["symbol"] }}</td><td>{{ stock["name"] }}</td></tr>
+        <tbody>
+        {% for price in stock_price %}
+        <tr>
+          <td>{{ stock["symbol"] }}</td>
+          <td> <a href="/stocks/{{ stock['symbol'] }}">{{ stock["name"] }}</a></td>
+        </tr>
         {% else %}
-        <tr><td colspan="2">No stocks found.</td></tr>
+        <tr>
+          <td colspan="2">No stocks found.</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
+
+     </div>
+    
   </body>
 </html>

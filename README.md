@@ -17,6 +17,15 @@ Copy-Item .env.example .env
 Copy-Item config.example.py config.py
 ```
 
+Install and build the React frontend (requires Node.js and npm):
+
+```powershell
+Set-Location frontend
+npm install
+npm run build
+Set-Location ..
+```
+
 Initialize the SQLite database and start the dashboard:
 
 ```powershell
@@ -24,6 +33,8 @@ python createdb.py
 python -m uvicorn main:app --reload --host 127.0.0.1 --port 18500
 ```
 
-Open [http://127.0.0.1:18500/](http://127.0.0.1:18500/) in your browser. The local
-database, `.env`, `config.py`, and virtual environment are intentionally excluded
-from version control.
+Open [http://127.0.0.1:18500/stocks](http://127.0.0.1:18500/stocks) in your browser.
+For frontend development, run `npm run dev` from `frontend` while the FastAPI
+server is running; Vite proxies API requests to port 18500. The local database,
+`.env`, `config.py`, virtual environment, and frontend build output are
+intentionally excluded from version control.
