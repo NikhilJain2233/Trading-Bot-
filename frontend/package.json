@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
+    "lightweight-charts": "^4.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-router-dom": "^7.18.7",
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {

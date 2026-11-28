@@ -42,7 +42,7 @@ def stock_detail(symbol: str):
 
         prices = connection.execute(
             """
-            SELECT date, open, close, high, low
+            SELECT date, open, close, high, low, volume
             FROM stock_price
             WHERE stock_id = ?
             ORDER BY date DESC

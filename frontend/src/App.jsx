@@ -1,8 +1,11 @@
 import React from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import myVideo from './assests/myvideo.gif'
+import StocksPage from './components/StocksPage.jsx'
+import StockDetailPage from './components/StockDetailPage.jsx'
  
-const App = () => {
+const HomePage = () => {
   return (
     <main>
       <section
@@ -32,17 +35,26 @@ const App = () => {
               <br />
               print money for you.
             </h1>
-            <a
-              href="/stocks"
+            <Link
+              to="/stocks"
               className="mt-7 inline-flex self-start items-center gap-2 rounded-full border border-transparent bg-transparent px-6 py-3 text-base font-medium text-white transition-colors hover:border-white hover:bg-black/40 focus-visible:border-white focus-visible:outline-none sm:px-9 sm:py-5 sm:text-xl"
             >
               Explore stocks
-            </a>
+            </Link>
           </div>
         </div>
       </section>
     </main>
   )
 }
+
+const App = () => (
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+    <Route path="/stocks" element={<StocksPage />} />
+    <Route path="/stocks/:symbol" element={<StockDetailPage />} />
+    <Route path="*" element={<p>Page not found.</p>} />
+  </Routes>
+)
 
 export default App
